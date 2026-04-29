@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotes for Love Letters</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page-title {
+            font-size: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            color: #999;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            width: 340px;   
+            height: 220px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 35px;
+            box-sizing: border-box;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.06);
+            border-radius: 1px;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 50px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:active {
+            transform: scale(0.97);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+        }
+
+        #strategy-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 400;
+            color: #111;
+            text-align: center;
+            word-break: normal;
+            opacity: 1;
+            transition: opacity 0.25s ease-in-out;
+        }
+
+        .controls {
+            display: flex;
+            gap: 30px;
+        }
+
+        button {
+            background: none;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            padding: 6px 0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #bbb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            color: #333;
+            border-bottom-color: #333;
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-title">QUOTES FOR LOVE LETTERS</div>
+
+    <div class="card" onclick="drawCard()">
+        <p id="strategy-text">TAP TO DRAW A CARD</p>
+    </div>
+
+    <div class="controls">
+        <button onclick="drawCard()">Draw a Card</button>
+        <button onclick="shuffleDeck()">Shuffle Deck</button>
+    </div>
+
+    <script>
+        const quotes = [
+            // 기존 파일(문구.docx)의 리스트
+            "“The need to go astray, to be destroyed, is an extremely private, distant, passionate, turbulent truth.”",
+            "“Life has always taken place in a tumult without apparent cohesion, but it only finds its grandeur and its reality in ecstasy and in ecstatic love.”",
+            "“We are the ink that gives the white page a meaning.”",
+            "“Don’t we touch each other just to prove we are still here?”",
+            "“it matters little / very little love is not so bad / or very little life”",
+            "“In a man's life, which may be short and may be long, everything is temporary. Nothing is forever.”",
+            "“I am sorry my clutch is all tendon and no discipline: the heart is a severed kind of muscle and alone.”",
+            "“WHAT YOU LOVE IS YOUR FATE”",
+            "“To love something, then, is to name it after something so worthless it might be left untouched—and alive.”",
+            "“the need for love revolting and grand.”",
+            "“At what moment does the knife wound sink so deep that the flesh begins to weep with love?”",
+            "“When I see it, suddenly, in the air, all little and white and moving; then I am in love again and very young and I believe everything.”",
+            "“You’re in my blood, this room, Spring floods with you…”",
+            "“You will have memories / because of what we did back then / when we were new at this, / Yes, we did many things then—all beautiful…”",
+            "“Everything beautiful and nothing hurt”",
+            "“I will help you: it is I who will invent lies for you and with them we will traverse the world.”",
+            "“What will be left of us in the world?”",
+            "“I will do what I have dreamt of doing, or I will do nothing at all.”",
+            "“But isn’t that what we are waiting for, to be together?”",
+
+            // 추가된 작가들의 문구 (이름 제거)
+            "“Am I in love? -Yes, since I'm waiting.”",
+            "“The lover's fatal identity is precisely: I am the one who waits.”",
+            "“I-love-you is active. It affirms itself as force—against other forces.”",
+            "“For the longest time, I thought pain meant that I was not loved. It meant I loved.”",
+            "“Even before you touched me, I belonged to you; all you had to do was look at me.”",
+            "“Intense love always leads to mourning.”",
+            "“To love another is something like prayer and can't be planned, you just fall into its arms.”",
+            "“Love and a cough cannot be concealed. Even a small cough. Even a small love.”",
+            "“If I loved you less, I might be able to talk about it more.”",
+            "“From this point on, the silence through which you move is my voice pursuing you.”",
+            "“Love is the time and space where I give myself the right to be extraordinary.”",
+            "“I'm telling you stories. Trust me.”",
+            "“Why is the measure of love loss?”",
+            "“You'll always be my favourite what-if.”",
+            "“I love you. What is it about those three words that makes them so hard to say, and so hard to hear?”",
+            "“To live in this world you must be able to do three things: to love what is mortal; to hold it against your bones knowing your own life depends on it; and, when the time comes to let it go, to let it go.”",
+            "“Tell me, what is it you plan to do with your one wild and precious life?”",
+            "“I don't know exactly what a prayer is. I do know how to pay attention.”",
+            "“I have never written anything that was not in some way about love.”",
+            "“I was no longer sure that I had a body, only a presence within his.”",
+            "“I wanted to be the object of his desire. And yet I wanted to remain myself.”",
+            "“Love is when you don't keep me from being alone, when you are the truth of my solitude.”",
+            "“Be careful with me. I'm not a thing.”",
+            "“Wait for me. I’m a star that’s very late.”",
+            "“What I want is not yet a word, and not yet a silence.”"
+        ];
+
+        let currentDeck = [...quotes];
+        const textElement = document.getElementById('strategy-text');
+
+        function drawCard() {
+            textElement.classList.add('fade-out');
+            setTimeout(() => {
+                if (currentDeck.length === 0) {
+                    textElement.innerText = "THE DECK IS EMPTY. SHUFFLE AGAIN.";
+                } else {
+                    const randomIndex = Math.floor(Math.random() * currentDeck.length);
+                    const selected = currentDeck.splice(randomIndex, 1);
+                    textElement.innerText = selected[0];
+                }
+                textElement.classList.remove('fade-out');
+            }, 250);
+        }
+
+        function shuffleDeck() {
+            currentDeck = [...quotes];
+            textElement.classList.add('fade-out');
+            setTimeout(() => {
+                textElement.innerText = "DECK SHUFFLED.";
+                textElement.classList.remove('fade-out');
+            }, 250);
+        }
+    </script>
+</body>
+</html>
